@@ -1,6 +1,7 @@
 library(shiny)
 library(dplyr)
 library(plotly)
+library(e1071)
 
 # Define UI
 ui <- fluidPage(
@@ -40,7 +41,7 @@ ui <- fluidPage(
                        h3("Ustawienia wyglądu"),
                        selectInput("theme", "Wybierz motyw", 
                                    choices = c("flatly", "cerulean", "darkly", "sandstone", "yeti")),
-                       numericInput("font_scale", "Skalowanie czcionki", 
+                       numericInput("font_scale", "Wybierz rozmiar czcionki", 
                                     value = 1.2, min = 0.5, max = 2, step = 0.1),
                        selectInput("font", "Wybierz czcionkę", 
                                    choices = c("Roboto", "Open Sans", "Lato", "Montserrat", "Source Sans Pro")),
@@ -90,6 +91,7 @@ ui <- fluidPage(
 )
 
 # Define server logic
+# Define server logic
 server <- function(input, output, session) {
   
   observeEvent(input$apply_settings, {
@@ -133,8 +135,10 @@ server <- function(input, output, session) {
     }
   })
   
-  model_tree <- readRDS("D:\\Desktop\\studia2\\projekt_ZMUM_WMUM\\models\\model_tree.rds")
-  model_svm <- readRDS("D:\\Desktop\\studia2\\projekt_ZMUM_WMUM\\models\\model_svm.rds")
+  model_tree_path <- file.path("..", "models", "model_tree.rds")
+  model_tree <- readRDS(model_tree_path)
+  model_svm_path <- file.path("..", "models", "model_svm.rds")
+  model_svm <- readRDS(model_svm_path)
   
   normalization_values <- reactive({
     req(df())
